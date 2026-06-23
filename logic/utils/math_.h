@@ -1,0 +1,13 @@
+//
+// Created by Administrator on 2026/6/23.
+//
+
+#ifndef NEU_2024_DATASTRUCTURE_TINYDELIVERY_MATH__H
+#define NEU_2024_DATASTRUCTURE_TINYDELIVERY_MATH__H
+
+
+class math_ {
+};
+
+
+#endif //NEU_2024_DATASTRUCTURE_TINYDELIVERY_MATH__H

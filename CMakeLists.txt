@@ -1,0 +1,116 @@
+cmake_minimum_required(VERSION 4.2)
+project(NEU_2024_DataStructure_TinyDelivery)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
+find_package(Qt6 COMPONENTS
+        Core
+        Gui
+        Widgets
+        REQUIRED)
+
+add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
+        gui/MainWindow.cpp
+        gui/MainWindow.h
+        gui/MapWidget.cpp
+        gui/MapWidget.h
+        gui/panels/ControlPanel.cpp
+        gui/panels/ControlPanel.h
+        gui/panels/DashboardPanel.cpp
+        gui/panels/DashboardPanel.h
+        gui/panels/MerchantPanel.cpp
+        gui/panels/MerchantPanel.h
+        gui/panels/WarehousePanel.cpp
+        gui/panels/WarehousePanel.h
+        gui/panels/CustomerPanel.cpp
+        gui/panels/CustomerPanel.h
+        gui/panels/DeliverPanel.cpp
+        gui/panels/DeliverPanel.h
+        gui/EventPopup.cpp
+        gui/EventPopup.h
+        logic/GameEngine.cpp
+        logic/GameEngine.h
+        logic/GameState.cpp
+        logic/GameState.h
+        logic/models/Order.cpp
+        logic/models/Order.h
+        logic/models/Deliever.cpp
+        logic/models/Deliever.h
+        logic/models/Warehouse.cpp
+        logic/models/Warehouse.h
+        logic/models/Merchant.cpp
+        logic/models/Merchant.h
+        logic/models/Customer.cpp
+        logic/models/Customer.h
+        logic/models/Vehicle.cpp
+        logic/models/Vehicle.h
+        logic/models/CityGrid.cpp
+        logic/models/CityGrid.h
+        logic/algorithms/OrderMerger.cpp
+        logic/algorithms/OrderMerger.h
+        logic/algorithms/DeliverSorter.cpp
+        logic/algorithms/DeliverSorter.h
+        logic/algorithms/InstructionCompressor.cpp
+        logic/algorithms/InstructionCompressor.h
+        logic/algorithms/PathFinder.cpp
+        logic/algorithms/PathFinder.h
+        logic/algorithms/AddressMatcher.cpp
+        logic/algorithms/AddressMatcher.h
+        logic/systems/DispatchSystem.cpp
+        logic/systems/DispatchSystem.h
+        logic/systems/WarehouseSystem.cpp
+        logic/systems/WarehouseSystem.h
+        logic/systems/ContractSystem.cpp
+        logic/systems/ContractSystem.h
+        logic/systems/EventSystem.cpp
+        logic/systems/EventSystem.h
+        logic/systems/UpgradeSystem.cpp
+        logic/systems/UpgradeSystem.h
+        logic/utils/Random_.cpp
+        logic/utils/Random_.h
+        logic/utils/Time_.cpp
+        logic/utils/Time_.h
+        logic/utils/Log_.cpp
+        logic/utils/Log_.h
+        logic/utils/Math_.cpp
+        logic/utils/Math_.h
+        logic/utils/json_.cpp
+        logic/utils/json_.h)
+target_link_libraries(NEU_2024_DataStructure_TinyDelivery
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets
+)
+
+if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(DEBUG_SUFFIX)
+    if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(DEBUG_SUFFIX "d")
+    endif ()
+    set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
+    if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+        set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+            set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        endif ()
+    endif ()
+    if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
+    endif ()
+    foreach (QT_LIB Core Gui Widgets)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+    endforeach (QT_LIB)
+endif ()

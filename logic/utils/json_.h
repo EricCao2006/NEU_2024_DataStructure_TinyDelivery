@@ -1,0 +1,13 @@
+//
+// Created by Administrator on 2026/6/23.
+//
+
+#ifndef NEU_2024_DATASTRUCTURE_TINYDELIVERY_JSON__H
+#define NEU_2024_DATASTRUCTURE_TINYDELIVERY_JSON__H
+
+
+class json_ {
+};
+
+
+#endif //NEU_2024_DATASTRUCTURE_TINYDELIVERY_JSON__H
