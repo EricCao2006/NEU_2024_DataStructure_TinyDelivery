@@ -7,6 +7,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
+include(FetchContent)
+FetchContent_Declare(
+        json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+)
+FetchContent_MakeAvailable(json)
+
 find_package(Qt6 COMPONENTS
         Core
         Gui
@@ -38,8 +45,8 @@ add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         logic/GameState.h
         logic/models/Order.cpp
         logic/models/Order.h
-        logic/models/Deliever.cpp
-        logic/models/Deliever.h
+        logic/models/Deliver.cpp
+        logic/models/Deliver.h
         logic/models/Warehouse.cpp
         logic/models/Warehouse.h
         logic/models/Merchant.cpp
@@ -70,20 +77,18 @@ add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         logic/systems/EventSystem.h
         logic/systems/UpgradeSystem.cpp
         logic/systems/UpgradeSystem.h
-        logic/utils/Random_.cpp
         logic/utils/Random_.h
-        logic/utils/Time_.cpp
         logic/utils/Time_.h
-        logic/utils/Log_.cpp
         logic/utils/Log_.h
-        logic/utils/Math_.cpp
         logic/utils/Math_.h
-        logic/utils/json_.cpp
-        logic/utils/json_.h)
+        logic/utils/json_.h
+        logic/models/Models.h
+        logic/algorithms/Algorithms.h)
 target_link_libraries(NEU_2024_DataStructure_TinyDelivery
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        nlohmann_json::nlohmann_json
 )
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)

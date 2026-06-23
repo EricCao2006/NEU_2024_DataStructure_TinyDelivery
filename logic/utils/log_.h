@@ -1,13 +1,40 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+#pragma once
 
-#ifndef NEU_2024_DATASTRUCTURE_TINYDELIVERY_LOGGER_H
-#define NEU_2024_DATASTRUCTURE_TINYDELIVERY_LOGGER_H
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
+namespace delivery::utils {
 
-class log_ {
-};
+    enum class LogLevel {
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR
+    };
 
+    inline std::string timestamp() {
+        auto now = std::chrono::system_clock::now();
+        auto time_t = std::chrono::system_clock::to_time_t(now);
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+            now.time_since_epoch()
+        ) % 1000;
+        std::stringstream ss;
+        ss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S")
+           << '.' << std::setfill('0') << std::setw(3) << ms.count();
+        return ss.str();
+    }
 
-#endif //NEU_2024_DATASTRUCTURE_TINYDELIVERY_LOGGER_H
+    inline void log(LogLevel level, const std::string& msg) {
+        const char* levelStr[] = {"[DEBUG]", "[INFO] ", "[WARN] ", "[ERROR]"};
+        std::cerr << timestamp() << " " << levelStr[static_cast<int>(level)] << " " << msg << std::endl;
+    }
+
+#define LOG_DEBUG(msg) delivery::utils::log(delivery::utils::LogLevel::DEBUG, msg)
+#define LOG_INFO(msg)  delivery::utils::log(delivery::utils::LogLevel::INFO, msg)
+#define LOG_WARN(msg)  delivery::utils::log(delivery::utils::LogLevel::WARN, msg)
+#define LOG_ERROR(msg) delivery::utils::log(delivery::utils::LogLevel::ERROR, msg)
+
+} // namespace delivery::utils
