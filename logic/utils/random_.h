@@ -15,14 +15,14 @@ namespace delivery::utils {
     }
 
     // [min, max] 闭区间整数
-    inline int randomInt(int min, int max) {
-        std::uniform_int_distribution<int> dist(min, max);
+    inline int randomInt(const int min, const int max) {
+        std::uniform_int_distribution dist(min, max);
         return dist(rng());
     }
 
     // [min, max) 半开区间浮点数
-    inline double randomDouble(double min, double max) {
-        std::uniform_real_distribution<double> dist(min, max);
+    inline double randomDouble(const double min, const double max) {
+        std::uniform_real_distribution dist(min, max);
         return dist(rng());
     }
 
@@ -32,7 +32,7 @@ namespace delivery::utils {
     }
 
     // 按概率 p 返回 true
-    inline bool randomChance(double probability) {
+    inline bool randomChance(const double probability) {
         return random01() < probability;
     }
 

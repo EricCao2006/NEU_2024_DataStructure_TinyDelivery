@@ -25,18 +25,18 @@ namespace delivery {
         Merchant(int id, const std::string& name, int x, int y, MerchantType type);
 
         // ========== Getter ==========
-        int id() const { return m_id; }
-        const std::string& name() const { return m_name; }
-        int x() const { return m_x; }
-        int y() const { return m_y; }
-        MerchantType type() const { return m_type; }
-        int orderCount() const { return m_orderCount; }             ///< 累计发出订单数
-        int reputation() const { return m_reputation; }             ///< 商家信誉 0-100
-        bool isActive() const { return m_active; }                  ///< 是否营业中
+        [[nodiscard]] int id() const { return m_id; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        [[nodiscard]] int x() const { return m_x; }
+        [[nodiscard]] int y() const { return m_y; }
+        [[nodiscard]] MerchantType type() const { return m_type; }
+        [[nodiscard]] int orderCount() const { return m_orderCount; }             ///< 累计发出订单数
+        [[nodiscard]] int reputation() const { return m_reputation; }             ///< 商家信誉 0-100
+        [[nodiscard]] bool isActive() const { return m_active; }                  ///< 是否营业中
 
         // ========== Setter ==========
-        void setPosition(int x, int y) { m_x = x; m_y = y; }
-        void setActive(bool active) { m_active = active; }
+        void setPosition(const int x, const int y) { m_x = x; m_y = y; }
+        void setActive(const bool active) { m_active = active; }
         void addOrder() { ++m_orderCount; }
         void changeReputation(int delta);
 
@@ -44,12 +44,12 @@ namespace delivery {
          * @brief 获取该商家的基础出单间隔（秒）
          * @return 间隔秒数，越小出单越频繁
          */
-        double baseOrderInterval() const;
+        [[nodiscard]] double baseOrderInterval() const;
 
         /**
          * @brief 获取该商家的平均订单重量（kg）
          */
-        double averageWeight() const;
+        [[nodiscard]] double averageWeight() const;
 
         /**
          * @brief 获取商家类型名称（中文）

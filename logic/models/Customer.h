@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <cstdint>
 
 namespace delivery {
 
@@ -14,18 +13,18 @@ namespace delivery {
         Customer(int id, const std::string& name, int x, int y, int vipLevel);
 
         // ========== Getter ==========
-        int id() const { return m_id; }
-        const std::string& name() const { return m_name; }
-        int x() const { return m_x; }
-        int y() const { return m_y; }
-        int vipLevel() const { return m_vipLevel; }                 ///< 0=普通, 1=银卡, 2=金卡, 3=钻石
-        int satisfaction() const { return m_satisfaction; }         ///< 满意度 0-100
-        int totalOrders() const { return m_totalOrders; }           ///< 累计订单数
-        double avgResponseTime() const { return m_avgResponseTime; } ///< 平均响应时间（秒）
+        [[nodiscard]] int id() const { return m_id; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        [[nodiscard]] int x() const { return m_x; }
+        [[nodiscard]] int y() const { return m_y; }
+        [[nodiscard]] int vipLevel() const { return m_vipLevel; }                 ///< 0=普通, 1=银卡, 2=金卡, 3=钻石
+        [[nodiscard]] int satisfaction() const { return m_satisfaction; }         ///< 满意度 0-100
+        [[nodiscard]] int totalOrders() const { return m_totalOrders; }           ///< 累计订单数
+        [[nodiscard]] double avgResponseTime() const { return m_avgResponseTime; } ///< 平均响应时间（秒）
 
         // ========== Setter ==========
-        void setPosition(int x, int y) { m_x = x; m_y = y; }
-        void setVipLevel(int level) { m_vipLevel = level; }
+        void setPosition(const int x, const int y) { m_x = x; m_y = y; }
+        void setVipLevel(const int level) { m_vipLevel = level; }
 
         /**
          * @brief 记录一次配送完成
@@ -37,17 +36,17 @@ namespace delivery {
         /**
          * @brief 获取VIP等级名称
          */
-        std::string vipLevelName() const;
+        [[nodiscard]] std::string vipLevelName() const;
 
         /**
          * @brief 该客户期望的最长等待时间（秒）
          */
-        int maxWaitTime() const;
+        [[nodiscard]] int maxWaitTime() const;
 
         /**
          * @brief VIP客户对延迟的容忍度系数（越高越不能忍）
          */
-        double urgencyFactor() const;
+        [[nodiscard]] double urgencyFactor() const;
 
     private:
         int m_id = -1;

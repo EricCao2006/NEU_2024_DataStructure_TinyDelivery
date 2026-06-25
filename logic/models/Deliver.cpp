@@ -4,21 +4,17 @@
 
 namespace delivery {
 
-    Deliver::Deliver(int id, const std::string& name, int x, int y, VehicleType vehicle)
+    Deliver::Deliver(const int id, const std::string& name, const int x, const int y, const VehicleType vehicle)
         : m_id(id)
         , m_name(name)
         , m_x(x)
         , m_y(y)
-        , m_vehicle(vehicle)
-        , m_status(DeliverStatus::IDLE)
-        , m_currentOrderId(-1)
-        , m_experience(0)
-        , m_fatigue(0) {}
+        , m_vehicle(vehicle) {}
 
     double Deliver::speedFactor() const {
         // 基础速度 × 经验加成 × 疲劳惩罚
-        double base = baseSpeed();
-        double expBonus = 1.0 + m_experience / 1000.0;   // 每1000经验 +10%
+        const double base = baseSpeed();
+        const double expBonus = 1.0 + m_experience / 1000.0;   // 每1000经验 +10%
         double fatiguePenalty = 1.0 - m_fatigue / 200.0; // 疲劳100时速度减半
         fatiguePenalty = std::max(0.3, fatiguePenalty);
         return base * expBonus * fatiguePenalty;
@@ -31,7 +27,7 @@ namespace delivery {
         }
     }
 
-    bool Deliver::moveToward(int tx, int ty) {
+    bool Deliver::moveToward(const int tx, const int ty) {
         if (m_x == tx && m_y == ty) {
             return true;
         }
@@ -44,10 +40,10 @@ namespace delivery {
         // 每次移动增加疲劳
         m_fatigue = std::min(100, m_fatigue + 1);
 
-        return (m_x == tx && m_y == ty);
+        return m_x == tx && m_y == ty;
     }
 
-    int Deliver::distanceTo(int tx, int ty) const {
+    int Deliver::distanceTo(const int tx, const int ty) const {
         return std::abs(m_x - tx) + std::abs(m_y - ty);
     }
 

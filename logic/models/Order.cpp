@@ -3,16 +3,11 @@
 
 namespace delivery {
 
-    Order::Order(int id, int merchantId, int customerId, double weight)
+    Order::Order(const int id, const int merchantId, const int customerId, const double weight)
         : m_id(id)
         , m_merchantId(merchantId)
         , m_customerId(customerId)
-        , m_weight(weight)
-        , m_status(OrderStatus::PENDING)
-        , m_deliverId(-1)
-        , m_currentStep(0)
-        , m_createTime(0)
-        , m_priority(0) {}
+        , m_weight(weight) {}
 
     bool Order::advance() {
         if (m_route.empty()) {

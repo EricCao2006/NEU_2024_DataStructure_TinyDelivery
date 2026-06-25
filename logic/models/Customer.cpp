@@ -4,17 +4,14 @@
 
 namespace delivery {
 
-    Customer::Customer(int id, const std::string& name, int x, int y, int vipLevel)
+    Customer::Customer(const int id, const std::string& name, const int x, const int y, const int vipLevel)
         : m_id(id)
         , m_name(name)
         , m_x(x)
         , m_y(y)
-        , m_vipLevel(std::clamp(vipLevel, 0, 3))
-        , m_satisfaction(80)
-        , m_totalOrders(0)
-        , m_avgResponseTime(0.0) {}
+        , m_vipLevel(std::clamp(vipLevel, 0, 3)) {}
 
-    void Customer::recordDelivery(double responseTime, bool onTime) {
+    void Customer::recordDelivery(const double responseTime, const bool onTime) {
         ++m_totalOrders;
         // 更新平均响应时间（指数移动平均）
         m_avgResponseTime = (m_avgResponseTime * (m_totalOrders - 1) + responseTime) / m_totalOrders;
@@ -25,7 +22,7 @@ namespace delivery {
             delta = 2 + m_vipLevel;  // VIP客户按时送达加分更多
         } else {
             // 超时惩罚 = 基础惩罚 × VIP紧迫系数
-            double penalty = 5.0 * (1.0 + m_vipLevel * 0.5);
+            const double penalty = 5.0 * (1.0 + m_vipLevel * 0.5);
             delta = -static_cast<int>(penalty);
         }
         m_satisfaction = std::clamp(m_satisfaction + delta, 0, 100);

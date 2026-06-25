@@ -8,7 +8,6 @@
 
 #include <string>
 #include <vector>
-#include <utility>
 #include <cstdint>
 
 namespace delivery::algo {
@@ -70,12 +69,12 @@ public:
     /**
      * @brief 获取当前元素数量
      */
-    size_t size() const { return m_size; }
+    [[nodiscard]] size_t size() const { return m_size; }
 
     /**
      * @brief 获取当前容量
      */
-    size_t capacity() const { return m_capacity; }
+    [[nodiscard]] size_t capacity() const { return m_capacity; }
 
     /**
      * @brief 清空哈希表
@@ -94,7 +93,7 @@ private:
     /**
      * @brief 计算槽位索引
      */
-    size_t getSlotIndex(uint64_t hash) const;
+    [[nodiscard]] size_t getSlotIndex(uint64_t hash) const;
 
     /**
      * @brief 线性探测找槽位

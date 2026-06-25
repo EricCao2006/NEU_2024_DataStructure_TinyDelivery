@@ -1,41 +1,50 @@
 #include "CityGrid.h"
 #include <queue>
-#include <unordered_map>
+#include "../algorithms/PathFinder.h"
 
 namespace delivery {
 
-    CityGrid::CityGrid(int size) : m_size(size) {}
+    CityGrid::CityGrid(const int size) : m_size(size) {}
 
-    bool CityGrid::isValid(int x, int y) const {
+    bool CityGrid::isValid(const int x, const int y) const {
         return x >= 0 && x < m_size && y >= 0 && y < m_size;
     }
 
-    bool CityGrid::isWalkable(int x, int y) const {
+    bool CityGrid::isWalkable(const int x, const int y) const {
         if (!isValid(x, y)) return false;
-        return m_obstacles.find(encode(x, y)) == m_obstacles.end();
+        return !m_obstacles.contains(encode(x, y));
     }
 
-    std::vector<std::pair<int, int>> CityGrid::neighbors(int x, int y) const {
+    std::vector<std::pair<int, int>> CityGrid::neighbors(const int x, const int y) const {
         std::vector<std::pair<int, int>> result;
-        const int dx[] = {0, 0, -1, 1};
-        const int dy[] = {-1, 1, 0, 0};
         for (int i = 0; i < 4; ++i) {
+            constexpr int dy[] = {-1, 1, 0, 0};
+            constexpr int dx[] = {0, 0, -1, 1};
             int nx = x + dx[i];
-            int ny = y + dy[i];
-            if (isWalkable(nx, ny)) {
+            if (int ny = y + dy[i]; isWalkable(nx, ny)) {
                 result.emplace_back(nx, ny);
             }
         }
         return result;
     }
 
-    void CityGrid::addObstacle(int x, int y) {
+    std::vector<std::pair<int, int>> CityGrid::getObstacles() const {
+        std::vector<std::pair<int, int>> result;
+        for (const int key : m_obstacles) {
+            int x = key / m_size;
+            int y = key % m_size;
+            result.emplace_back(x, y);
+        }
+        return result;
+    }
+
+    void CityGrid::addObstacle(const int x, const int y) {
         if (isValid(x, y)) {
             m_obstacles.insert(encode(x, y));
         }
     }
 
-    void CityGrid::removeObstacle(int x, int y) {
+    void CityGrid::removeObstacle(const int x, const int y) {
         m_obstacles.erase(encode(x, y));
     }
 
@@ -43,30 +52,16 @@ namespace delivery {
         m_obstacles.clear();
     }
 
-    bool CityGrid::isConnected(int x1, int y1, int x2, int y2) const {
-        // TODO: 依赖 PathFinder 模块完成后实现
-        // 临时实现：用 BFS 检测连通性
+    bool CityGrid::isConnected(const int x1, const int y1, const int x2, const int y2) const {
+        // 直接使用 PathFinder 检测连通性
         if (!isWalkable(x1, y1) || !isWalkable(x2, y2)) return false;
         if (x1 == x2 && y1 == y2) return true;
 
-        std::queue<std::pair<int, int>> q;
-        std::unordered_map<int, bool> visited;
-        q.emplace(x1, y1);
-        visited[encode(x1, y1)] = true;
+        auto isWalkable = [this](const int x, const int y) -> bool {
+            return this->isWalkable(x, y);
+        };
 
-        while (!q.empty()) {
-            auto [cx, cy] = q.front();
-            q.pop();
-            for (auto [nx, ny] : neighbors(cx, cy)) {
-                if (nx == x2 && ny == y2) return true;
-                int key = encode(nx, ny);
-                if (!visited[key]) {
-                    visited[key] = true;
-                    q.emplace(nx, ny);
-                }
-            }
-        }
-        return false;
+        const auto result = algo::dijkstra(isWalkable, x1, y1, x2, y2);
+        return result.found;
     }
-
 } // namespace delivery

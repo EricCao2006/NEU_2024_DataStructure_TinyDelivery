@@ -16,9 +16,9 @@ namespace delivery::utils {
     };
 
     inline std::string timestamp() {
-        auto now = std::chrono::system_clock::now();
-        auto time_t = std::chrono::system_clock::to_time_t(now);
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        const auto now = std::chrono::system_clock::now();
+        const auto time_t = std::chrono::system_clock::to_time_t(now);
+        const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
             now.time_since_epoch()
         ) % 1000;
         std::stringstream ss;
@@ -32,6 +32,7 @@ namespace delivery::utils {
         std::cerr << timestamp() << " " << levelStr[static_cast<int>(level)] << " " << msg << std::endl;
     }
 
+    //TODO：教师要求使用算法时输出对应的[INFO]
 #define LOG_DEBUG(msg) delivery::utils::log(delivery::utils::LogLevel::DEBUG, msg)
 #define LOG_INFO(msg)  delivery::utils::log(delivery::utils::LogLevel::INFO, msg)
 #define LOG_WARN(msg)  delivery::utils::log(delivery::utils::LogLevel::WARN, msg)

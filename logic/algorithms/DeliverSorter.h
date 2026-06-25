@@ -7,7 +7,6 @@
  */
 
 #include <vector>
-#include <functional>
 #include <cstdint>
 
 namespace delivery::algo {

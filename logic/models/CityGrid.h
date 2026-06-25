@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <utility>
-#include <cstdint>
 #include <unordered_set>
 
 namespace delivery {
@@ -34,15 +33,19 @@ namespace delivery {
          */
         std::vector<std::pair<int, int>> neighbors(int x, int y) const;
 
+        /**
+         * @brief 获取所有障碍物坐标列表
+         */
+        std::vector<std::pair<int, int>> getObstacles() const;
+
         // ========== Setter ==========
-        void setSize(int size) { m_size = size; }
+        void setSize(const int size) { m_size = size; }
         void addObstacle(int x, int y);
         void removeObstacle(int x, int y);
         void clearObstacles();
 
         /**
-         * @brief 判断两点之间是否连通（BFS验证，用于调试）
-         * TODO: 依赖算法模块完成后实现（可用PathFinder）
+         * @brief 判断两点之间是否连通
          */
         bool isConnected(int x1, int y1, int x2, int y2) const;
 
@@ -53,7 +56,7 @@ namespace delivery {
         /**
          * @brief 将坐标编码为唯一整数
          */
-        int encode(int x, int y) const { return x * m_size + y; }
+        int encode(const int x, const int y) const { return x * m_size + y; }
     };
 
 } // namespace delivery

@@ -8,10 +8,7 @@ namespace delivery {
         , m_name(name)
         , m_x(x)
         , m_y(y)
-        , m_capacity(capacity)
-        , m_currentLoad(0)
-        , m_throughput(10.0)
-        , m_level(1) {}
+        , m_capacity(capacity) {}
 
     void Warehouse::upgrade() {
         if (m_level >= 5) return;
@@ -20,7 +17,7 @@ namespace delivery {
         m_throughput += 5.0 * m_level;
     }
 
-    bool Warehouse::receive(int count) {
+    bool Warehouse::receive(const int count) {
         if (m_currentLoad + count > m_capacity) {
             return false;
         }
@@ -28,8 +25,8 @@ namespace delivery {
         return true;
     }
 
-    int Warehouse::dispatch(int count) {
-        int actual = std::min(count, m_currentLoad);
+    int Warehouse::dispatch(const int count) {
+        const int actual = std::min(count, m_currentLoad);
         m_currentLoad -= actual;
         return actual;
     }

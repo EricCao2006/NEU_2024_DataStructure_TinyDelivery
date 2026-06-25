@@ -1,6 +1,5 @@
 #include "OrderMerger.h"
 #include <algorithm>
-#include <cmath>
 
 namespace delivery::algo {
 
@@ -23,17 +22,16 @@ namespace delivery::algo {
                 continue;
             }
 
-            auto& last = result.merged.back();
+            auto&[merchantId, customerId, weight, count] = result.merged.back();
 
             // 判断是否可以合并
-            bool sameKey = (last.merchantId == feat.merchantId &&
-                            last.customerId == feat.customerId);
-            bool weightOk = (last.weight + feat.weight <= config.maxWeightPerMerge);
+            const bool sameKey = merchantId == feat.merchantId &&
+                                 customerId == feat.customerId;
 
-            if (sameKey && weightOk) {
+            if (const bool weightOk = weight + feat.weight <= config.maxWeightPerMerge; sameKey && weightOk) {
                 // 合并：累加重量和计数
-                last.weight += feat.weight;
-                last.count += feat.count;
+                weight += feat.weight;
+                count += feat.count;
                 result.weightSaved += feat.weight;  // 节省了这部分重量（如果没合并要多跑一趟）
             } else {
                 result.merged.push_back(feat);
@@ -52,7 +50,7 @@ namespace delivery::algo {
         std::vector<OrderFeature> result;
         result.reserve(orderIds.size());
 
-        for (int id : orderIds) {
+        for (const int id : orderIds) {
             result.push_back(getter(id));
         }
 

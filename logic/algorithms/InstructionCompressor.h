@@ -23,7 +23,7 @@ struct HuffmanNode {
     std::unique_ptr<HuffmanNode> left;   ///< 左子节点（0）
     std::unique_ptr<HuffmanNode> right;  ///< 右子节点（1）
 
-    bool isLeaf() const { return !left && !right; }
+    [[nodiscard]] bool isLeaf() const { return !left && !right; }
 };
 
 /**
@@ -64,7 +64,7 @@ public:
      * @param text 原始指令文本
      * @return CompressResult
      */
-    CompressResult compress(const std::string& text);
+    static CompressResult compress(const std::string& text);
 
     /**
      * @brief 解压数据
@@ -73,7 +73,7 @@ public:
      * @param originalSize 原始文本大小（用于验证）
      * @return DecompressResult
      */
-    DecompressResult decompress(
+    static DecompressResult decompress(
         const std::vector<uint8_t>& data,
         const std::unordered_map<char, std::string>& codeTable,
         size_t originalSize
@@ -90,27 +90,27 @@ private:
     /**
      * @brief 统计字符频率
      */
-    std::unordered_map<char, int> buildFrequency(const std::string& text);
+    static std::unordered_map<char, int> buildFrequency(const std::string& text);
 
     /**
      * @brief 构建哈夫曼树（使用最小堆）
      */
-    std::unique_ptr<HuffmanNode> buildTree(const std::unordered_map<char, int>& freq);
+    static std::unique_ptr<HuffmanNode> buildTree(const std::unordered_map<char, int>& freq);
 
     /**
      * @brief 生成编码表（DFS遍历哈夫曼树）
      */
-    void generateCodes(const HuffmanNode* node, const std::string& prefix, CodeTable& out);
+    static void generateCodes(const HuffmanNode* node, const std::string& prefix, CodeTable& out);
 
     /**
      * @brief 将二进制字符串转为字节流
      */
-    std::vector<uint8_t> encodeToBytes(const std::string& bitString);
+    static std::vector<uint8_t> encodeToBytes(const std::string& bitString);
 
     /**
      * @brief 将字节流转为二进制字符串
      */
-    std::string decodeFromBytes(const std::vector<uint8_t>& data, size_t totalBits);
+    static std::string decodeFromBytes(const std::vector<uint8_t>& data, size_t totalBits);
 
     /**
      * @brief 序列化编码表

@@ -16,20 +16,20 @@ namespace delivery::utils {
     // 游戏内时间管理器（支持调速）
     class GameTimer {
     public:
-        GameTimer() : m_speed(1.0), m_paused(false) {}
+        GameTimer() = default;
 
-        void setSpeed(double speed) {
+        void setSpeed(const double speed) {
             m_speed = std::max(0.0, speed);
         }
 
-        double speed() const { return m_speed; }
+        [[nodiscard]] double speed() const { return m_speed; }
 
         void pause() { m_paused = true; }
         void resume() { m_paused = false; }
-        bool isPaused() const { return m_paused; }
+        [[nodiscard]] bool isPaused() const { return m_paused; }
 
         // 每帧调用，返回经过的游戏时间（毫秒）
-        double tick(double realDeltaMs) {
+        [[nodiscard]] double tick(const double realDeltaMs) const {
             if (m_paused || m_speed <= 0) {
                 return 0.0;
             }

@@ -3,7 +3,6 @@
 #include "utils/random_.h"
 #include <algorithm>
 #include <fstream>
-#include <filesystem>
 
 namespace delivery {
 
@@ -42,12 +41,144 @@ bool GameState::loadFromFile(const std::string& path) {
         m_failedOrders = json.value("failedOrders", 0);
         m_totalRevenue = json.value("totalRevenue", 0.0);
 
-        // TODO: 加载各数据容器（等json序列化支持完善后）
-        // 目前先重置为默认，后续补充
-        initDefaultCity();
+        // 加载各数据容器
+        // 清空现有数据
+        orders.clear();
+        delivers.clear();
+        warehouses.clear();
+        merchants.clear();
+        customers.clear();
+        vehicles.clear();
+        pendingOrderIds.clear();
+
+        // 加载商家
+        if (json.contains("merchants")) {
+            for (const auto& m : json["merchants"]) {
+                Merchant merchant(
+                    m.value("id", 0),
+                    m.value("name", "商家"),
+                    m.value("x", 0),
+                    m.value("y", 0),
+                    static_cast<MerchantType>(m.value("type", 1))
+                );
+                merchant.setActive(m.value("active", true));
+                merchant.changeReputation(m.value("reputation", 80) - 80);
+                // 恢复订单计数
+                for (int i = 0; i < m.value("orderCount", 0); ++i) {
+                    merchant.addOrder();
+                }
+                merchants.push_back(merchant);
+            }
+        }
+
+        // 加载客户
+        if (json.contains("customers")) {
+            for (const auto& c : json["customers"]) {
+                Customer customer(
+                    c.value("id", 0),
+                    c.value("name", "客户"),
+                    c.value("x", 0),
+                    c.value("y", 0),
+                    c.value("vipLevel", 0)
+                );
+                customer.setVipLevel(c.value("vipLevel", 0));
+                // 恢复满意度（通过记录模拟）
+                if (int sat = c.value("satisfaction", 80); sat > 80) {
+                    for (int i = 0; i < sat - 80; ++i) {
+                        customer.recordDelivery(100, true);
+                    }
+                } else if (sat < 80) {
+                    for (int i = 0; i < 80 - sat; ++i) {
+                        customer.recordDelivery(2000, false);
+                    }
+                }
+                customers.push_back(customer);
+            }
+        }
+
+        // 加载仓库
+        if (json.contains("warehouses")) {
+            for (const auto& w : json["warehouses"]) {
+                Warehouse warehouse(
+                    w.value("id", 0),
+                    w.value("name", "仓库"),
+                    w.value("x", 0),
+                    w.value("y", 0),
+                    w.value("capacity", 500)
+                );
+                // 恢复库存（通过多次 receive）
+                int load = w.value("currentLoad", 0);
+                for (int i = 0; i < load; ++i) {
+                    warehouse.receive(1);
+                }
+                // 恢复等级
+                int level = w.value("level", 1);
+                for (int i = 1; i < level; ++i) {
+                    warehouse.upgrade();
+                }
+                warehouses.push_back(warehouse);
+            }
+        }
+
+        // 加载骑手
+        if (json.contains("delivers")) {
+            for (const auto& d : json["delivers"]) {
+                auto vt = static_cast<VehicleType>(d.value("vehicle", 0));
+                Deliver deliver(
+                    d.value("id", 0),
+                    d.value("name", "骑手"),
+                    d.value("x", 0),
+                    d.value("y", 0),
+                    vt
+                );
+                deliver.addExperience(d.value("experience", 0));
+                deliver.setFatigue(d.value("fatigue", 0));
+                delivers.push_back(deliver);
+            }
+        }
+
+        // 加载订单（简化：只恢复已完成的订单）
+        if (json.contains("orders")) {
+            for (const auto& o : json["orders"]) {
+                Order order(
+                    o.value("id", 0),
+                    o.value("merchantId", 0),
+                    o.value("customerId", 0),
+                    o.value("weight", 1.0)
+                );
+                order.setCreateTime(o.value("createTime", 0));
+                order.setPriority(o.value("priority", 0));
+                // 只恢复已完成订单
+                if (o.value("status", 0) == static_cast<int>(OrderStatus::COMPLETED)) {
+                    order.setStatus(OrderStatus::COMPLETED);
+                    orders.push_back(order);
+                }
+                // 待处理订单在 pendingOrderIds 中恢复
+            }
+        }
+
+        // 加载待处理订单ID
+        if (json.contains("pendingOrderIds")) {
+            for (const auto& id : json["pendingOrderIds"]) {
+                pendingOrderIds.push_back(id.get<int>());
+            }
+        }
+
+        // 加载城市网格
+        if (json.contains("cityGrid")) {
+            int size = json["cityGrid"].value("size", 20);
+            cityGrid = CityGrid(size);
+            if (json["cityGrid"].contains("obstacles")) {
+                for (const auto& obs : json["cityGrid"]["obstacles"]) {
+                    cityGrid.addObstacle(obs.value("x", 0), obs.value("y", 0));
+                }
+            }
+        }
+
         rebuildIndex();
         LOG_INFO("存档加载成功: " + path);
         return true;
+
     } catch (const std::exception& e) {
         LOG_ERROR("加载存档失败: " + std::string(e.what()));
         reset();
@@ -57,18 +188,113 @@ bool GameState::loadFromFile(const std::string& path) {
 
 bool GameState::saveToFile(const std::string& path) const {
     utils::json j;
+
+    // 基本状态
     j["money"] = m_money;
     j["gameTime"] = m_gameTime;
-    j["level"] = static_cast<int>(m_level);
+    j["level"] = m_level;
     j["reputation"] = m_reputation;
     j["totalOrders"] = m_totalOrders;
     j["completedOrders"] = m_completedOrders;
     j["failedOrders"] = m_failedOrders;
     j["totalRevenue"] = m_totalRevenue;
 
-    // TODO: 序列化各数据容器
-    // j["orders"] = ...;
-    // j["delivers"] = ...;
+    // ★ 序列化各数据容器
+
+    // 序列化商家
+    utils::json merchantsArr = utils::json::array();
+    for (const auto& m : merchants) {
+        utils::json obj;
+        obj["id"] = m.id();
+        obj["name"] = m.name();
+        obj["x"] = m.x();
+        obj["y"] = m.y();
+        obj["type"] = m.type();
+        obj["active"] = m.isActive();
+        obj["reputation"] = m.reputation();
+        obj["orderCount"] = m.orderCount();
+        merchantsArr.push_back(obj);
+    }
+    j["merchants"] = merchantsArr;
+
+    // 序列化客户
+    utils::json customersArr = utils::json::array();
+    for (const auto& c : customers) {
+        utils::json obj;
+        obj["id"] = c.id();
+        obj["name"] = c.name();
+        obj["x"] = c.x();
+        obj["y"] = c.y();
+        obj["vipLevel"] = c.vipLevel();
+        obj["satisfaction"] = c.satisfaction();
+        customersArr.push_back(obj);
+    }
+    j["customers"] = customersArr;
+
+    // 序列化仓库
+    utils::json warehousesArr = utils::json::array();
+    for (const auto& w : warehouses) {
+        utils::json obj;
+        obj["id"] = w.id();
+        obj["name"] = w.name();
+        obj["x"] = w.x();
+        obj["y"] = w.y();
+        obj["capacity"] = w.capacity();
+        obj["currentLoad"] = w.currentLoad();
+        obj["level"] = w.level();
+        warehousesArr.push_back(obj);
+    }
+    j["warehouses"] = warehousesArr;
+
+    // 序列化骑手
+    utils::json deliversArr = utils::json::array();
+    for (const auto& d : delivers) {
+        utils::json obj;
+        obj["id"] = d.id();
+        obj["name"] = d.name();
+        obj["x"] = d.x();
+        obj["y"] = d.y();
+        obj["vehicle"] = d.vehicle();
+        obj["experience"] = d.experience();
+        obj["fatigue"] = d.fatigue();
+        deliversArr.push_back(obj);
+    }
+    j["delivers"] = deliversArr;
+
+    // 序列化订单（只存已完成和待处理的）
+    utils::json ordersArr = utils::json::array();
+    for (const auto& o : orders) {
+        // 只保存已完成或待处理的订单
+        if (o.status() == OrderStatus::COMPLETED || o.status() == OrderStatus::PENDING) {
+            utils::json obj;
+            obj["id"] = o.id();
+            obj["merchantId"] = o.merchantId();
+            obj["customerId"] = o.customerId();
+            obj["weight"] = o.weight();
+            obj["status"] = o.status();
+            obj["createTime"] = o.createTime();
+            obj["priority"] = o.priority();
+            ordersArr.push_back(obj);
+        }
+    }
+    j["orders"] = ordersArr;
+
+    // 序列化待处理订单ID
+    j["pendingOrderIds"] = pendingOrderIds;
+
+    // 序列化城市网格
+    utils::json gridObj;
+    gridObj["size"] = cityGrid.size();
+
+    // 保存城市障碍物
+    utils::json obstaclesArr = utils::json::array();
+    for (const auto&[fst, snd] : cityGrid.getObstacles()) {
+        utils::json obj;
+        obj["x"] = fst;
+        obj["y"] = snd;
+        obstaclesArr.push_back(obj);
+    }
+    j["cityGrid"]["obstacles"] = obstaclesArr;
 
     bool ok = utils::saveJSON(path, j);
     if (ok) {
@@ -103,7 +329,7 @@ void GameState::reset() {
 }
 
 // ========== 资金 ==========
-bool GameState::spendMoney(int amount) {
+bool GameState::spendMoney(const int amount) {
     if (amount < 0) {
         LOG_WARN("spendMoney: 金额不能为负数");
         return false;
@@ -117,7 +343,7 @@ bool GameState::spendMoney(int amount) {
 
 // ========== 等级 ==========
 const LevelInfo& GameState::currentLevelInfo() const {
-    int idx = static_cast<int>(m_level);
+    const int idx = static_cast<int>(m_level);
     if (idx < 0 || idx >= static_cast<int>(LEVEL_CONFIG.size())) {
         return LEVEL_CONFIG[0];
     }
@@ -125,7 +351,7 @@ const LevelInfo& GameState::currentLevelInfo() const {
 }
 
 bool GameState::canUpgrade() const {
-    int idx = static_cast<int>(m_level);
+    const int idx = static_cast<int>(m_level);
     if (idx >= static_cast<int>(LEVEL_CONFIG.size()) - 1) {
         return false;  // 已是最高级
     }
@@ -138,7 +364,7 @@ bool GameState::doUpgrade() {
         LOG_WARN("升级条件不满足");
         return false;
     }
-    int idx = static_cast<int>(m_level);
+    const int idx = static_cast<int>(m_level);
     const auto& next = LEVEL_CONFIG[idx + 1];
     if (!spendMoney(next.upgradeCost)) {
         return false;
@@ -149,7 +375,7 @@ bool GameState::doUpgrade() {
 }
 
 // ========== 信誉 ==========
-void GameState::changeReputation(int delta) {
+void GameState::changeReputation(const int delta) {
     m_reputation = std::clamp(m_reputation + delta, 0, 100);
     if (delta != 0) {
         LOG_DEBUG("信誉变化: " + std::to_string(delta) + ", 当前: " + std::to_string(m_reputation));
@@ -157,7 +383,7 @@ void GameState::changeReputation(int delta) {
 }
 
 // ========== 统计 ==========
-void GameState::recordOrderCompleted(double revenue) {
+void GameState::recordOrderCompleted(const double revenue) {
     ++m_completedOrders;
     ++m_totalOrders;
     m_totalRevenue += revenue;
@@ -173,80 +399,80 @@ void GameState::recordOrderFailed() {
 }
 
 // ========== 查找 ==========
-Order* GameState::findOrder(int id) {
-    auto it = orderIndex.find(id);
+Order* GameState::findOrder(const int id) {
+    const auto it = orderIndex.find(id);
     if (it == orderIndex.end() || it->second >= static_cast<int>(orders.size())) {
         return nullptr;
     }
     return &orders[it->second];
 }
 
-Deliver* GameState::findDeliver(int id) {
-    auto it = deliverIndex.find(id);
+Deliver* GameState::findDeliver(const int id) {
+    const auto it = deliverIndex.find(id);
     if (it == deliverIndex.end() || it->second >= static_cast<int>(delivers.size())) {
         return nullptr;
     }
     return &delivers[it->second];
 }
 
-Warehouse* GameState::findWarehouse(int id) {
-    auto it = warehouseIndex.find(id);
+Warehouse* GameState::findWarehouse(const int id) {
+    const auto it = warehouseIndex.find(id);
     if (it == warehouseIndex.end() || it->second >= static_cast<int>(warehouses.size())) {
         return nullptr;
     }
     return &warehouses[it->second];
 }
 
-Merchant* GameState::findMerchant(int id) {
-    auto it = merchantIndex.find(id);
+Merchant* GameState::findMerchant(const int id) {
+    const auto it = merchantIndex.find(id);
     if (it == merchantIndex.end() || it->second >= static_cast<int>(merchants.size())) {
         return nullptr;
     }
     return &merchants[it->second];
 }
 
-Customer* GameState::findCustomer(int id) {
-    auto it = customerIndex.find(id);
+Customer* GameState::findCustomer(const int id) {
+    const auto it = customerIndex.find(id);
     if (it == customerIndex.end() || it->second >= static_cast<int>(customers.size())) {
         return nullptr;
     }
     return &customers[it->second];
 }
 
-const Order* GameState::findOrder(int id) const {
-    auto it = orderIndex.find(id);
+const Order* GameState::findOrder(const int id) const {
+    const auto it = orderIndex.find(id);
     if (it == orderIndex.end() || it->second >= static_cast<int>(orders.size())) {
         return nullptr;
     }
     return &orders[it->second];
 }
 
-const Deliver* GameState::findDeliver(int id) const {
-    auto it = deliverIndex.find(id);
+const Deliver* GameState::findDeliver(const int id) const {
+    const auto it = deliverIndex.find(id);
     if (it == deliverIndex.end() || it->second >= static_cast<int>(delivers.size())) {
         return nullptr;
     }
     return &delivers[it->second];
 }
 
-const Warehouse* GameState::findWarehouse(int id) const {
-    auto it = warehouseIndex.find(id);
+const Warehouse* GameState::findWarehouse(const int id) const {
+    const auto it = warehouseIndex.find(id);
     if (it == warehouseIndex.end() || it->second >= static_cast<int>(warehouses.size())) {
         return nullptr;
     }
     return &warehouses[it->second];
 }
 
-const Merchant* GameState::findMerchant(int id) const {
-    auto it = merchantIndex.find(id);
+const Merchant* GameState::findMerchant(const int id) const {
+    const auto it = merchantIndex.find(id);
     if (it == merchantIndex.end() || it->second >= static_cast<int>(merchants.size())) {
         return nullptr;
     }
     return &merchants[it->second];
 }
 
-const Customer* GameState::findCustomer(int id) const {
-    auto it = customerIndex.find(id);
+const Customer* GameState::findCustomer(const int id) const {
+    const auto it = customerIndex.find(id);
     if (it == customerIndex.end() || it->second >= static_cast<int>(customers.size())) {
         return nullptr;
     }
@@ -264,11 +490,10 @@ std::vector<int> GameState::getIdleDelivers() const {
     return result;
 }
 
-std::vector<int> GameState::getPendingOrdersByMerchant(int merchantId) const {
+std::vector<int> GameState::getPendingOrdersByMerchant(const int merchantId) const {
     std::vector<int> result;
     for (int orderId : pendingOrderIds) {
-        const auto* order = findOrder(orderId);
-        if (order && order->merchantId() == merchantId) {
+        if (const auto* order = findOrder(orderId); order && order->merchantId() == merchantId) {
             result.push_back(orderId);
         }
     }
@@ -345,14 +570,14 @@ void GameState::initDefaultCity() {
 
     // 从配置文件加载
     try {
-        int size = config.value("grid_size", 20);
+        const int size = config.value("grid_size", 20);
         cityGrid = CityGrid(size);
 
         // 加载障碍物
         if (config.contains("obstacles")) {
             for (const auto& obs : config["obstacles"]) {
-                int x = obs.value("x", 0);
-                int y = obs.value("y", 0);
+                const int x = obs.value("x", 0);
+                const int y = obs.value("y", 0);
                 cityGrid.addObstacle(x, y);
             }
         }

@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <cstdint>
 
 namespace delivery {
 
@@ -15,19 +13,19 @@ namespace delivery {
         Warehouse(int id, const std::string& name, int x, int y, int capacity);
 
         // ========== Getter ==========
-        int id() const { return m_id; }
-        const std::string& name() const { return m_name; }
-        int x() const { return m_x; }
-        int y() const { return m_y; }
-        int capacity() const { return m_capacity; }
-        int currentLoad() const { return m_currentLoad; }
-        double throughput() const { return m_throughput; }          ///< 吞吐量（件/秒）
-        int level() const { return m_level; }                       ///< 仓库等级 1-5
+        [[nodiscard]] int id() const { return m_id; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
+        [[nodiscard]] int x() const { return m_x; }
+        [[nodiscard]] int y() const { return m_y; }
+        [[nodiscard]] int capacity() const { return m_capacity; }
+        [[nodiscard]] int currentLoad() const { return m_currentLoad; }
+        [[nodiscard]] double throughput() const { return m_throughput; }          ///< 吞吐量（件/秒）
+        [[nodiscard]] int level() const { return m_level; }                       ///< 仓库等级 1-5
 
         // ========== Setter ==========
-        void setPosition(int x, int y) { m_x = x; m_y = y; }
+        void setPosition(const int x, const int y) { m_x = x; m_y = y; }
         void upgrade();                                              ///< 升级仓库（容量+吞吐量提升）
-        void setThroughput(double throughput) { m_throughput = throughput; }
+        void setThroughput(const double throughput) { m_throughput = throughput; }
 
         /**
          * @brief 入库
@@ -46,17 +44,17 @@ namespace delivery {
         /**
          * @brief 获取当前负载率 (0-1)
          */
-        double loadRate() const;
+        [[nodiscard]] double loadRate() const;
 
         /**
          * @brief 是否爆仓（负载率 >= 1）
          */
-        bool isFull() const { return m_currentLoad >= m_capacity; }
+        [[nodiscard]] bool isFull() const { return m_currentLoad >= m_capacity; }
 
         /**
          * @brief 获取升级到下一级的费用
          */
-        int upgradeCost() const;
+        [[nodiscard]] int upgradeCost() const;
 
     private:
         int m_id = -1;

@@ -83,7 +83,8 @@ add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         logic/utils/Math_.h
         logic/utils/json_.h
         logic/models/Models.h
-        logic/algorithms/Algorithms.h)
+        logic/algorithms/Algorithms.h
+        logic/systems/Systems.h)
 target_link_libraries(NEU_2024_DataStructure_TinyDelivery
         Qt::Core
         Qt::Gui

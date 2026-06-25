@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 #include <cstdint>
 
@@ -27,23 +26,24 @@ public:
     Order(int id, int merchantId, int customerId, double weight);
 
     // ========== Getter ==========
-    int id() const { return m_id; }
-    int merchantId() const { return m_merchantId; }
-    int customerId() const { return m_customerId; }
-    double weight() const { return m_weight; }
-    OrderStatus status() const { return m_status; }
-    int deliverId() const { return m_deliverId; }
-    const std::vector<std::pair<int, int>>& route() const { return m_route; }
-    int currentStep() const { return m_currentStep; }
-    int createTime() const { return m_createTime; }          ///< 游戏内时间戳
-    int priority() const { return m_priority; }              ///< 优先级（VIP客户更高）
+    [[nodiscard]] int id() const { return m_id; }
+    [[nodiscard]] int merchantId() const { return m_merchantId; }
+    [[nodiscard]] int customerId() const { return m_customerId; }
+    [[nodiscard]] double weight() const { return m_weight; }
+    [[nodiscard]] OrderStatus status() const { return m_status; }
+    [[nodiscard]] int deliverId() const { return m_deliverId; }
+    [[nodiscard]] const std::vector<std::pair<int, int>>& route() const { return m_route; }
+    [[nodiscard]] int currentStep() const { return m_currentStep; }
+    [[nodiscard]] int createTime() const { return m_createTime; }          ///< 游戏内时间戳
+    [[nodiscard]] int priority() const { return m_priority; }              ///< 优先级（VIP客户更高）
 
     // ========== Setter ==========
-    void setStatus(OrderStatus status) { m_status = status; }
-    void setDeliverId(int id) { m_deliverId = id; }
+    void setStatus(const OrderStatus status) { m_status = status; }
+    void setDeliverId(const int id) { m_deliverId = id; }
     void setRoute(const std::vector<std::pair<int, int>>& route) { m_route = route; }
-    void setPriority(int priority) { m_priority = priority; }
-
+    void setPriority(const int priority) { m_priority = priority; }
+    void setCreateTime(const int time) { m_createTime = time; }
+    
     /**
      * @brief 沿路径前进一格，返回是否到达终点
      * @return true 表示到达终点（最后一个节点）
@@ -54,12 +54,12 @@ public:
      * @brief 获取当前坐标
      * @return (x, y) 坐标对，若路径为空则返回 (-1, -1)
      */
-    std::pair<int, int> currentPosition() const;
+    [[nodiscard]] std::pair<int, int> currentPosition() const;
 
     /**
      * @brief 检查订单是否已到达最终目的地
      */
-    bool isCompleted() const { return m_status == OrderStatus::COMPLETED; }
+    [[nodiscard]] bool isCompleted() const { return m_status == OrderStatus::COMPLETED; }
 
 private:
     int m_id = -1;                                               ///< 订单唯一ID

@@ -3,17 +3,14 @@
 
 namespace delivery {
 
-    Merchant::Merchant(int id, const std::string& name, int x, int y, MerchantType type)
+    Merchant::Merchant(const int id, const std::string& name, const int x, const int y, const MerchantType type)
         : m_id(id)
         , m_name(name)
         , m_x(x)
         , m_y(y)
-        , m_type(type)
-        , m_orderCount(0)
-        , m_reputation(80)
-        , m_active(true) {}
+        , m_type(type) {}
 
-    void Merchant::changeReputation(int delta) {
+    void Merchant::changeReputation(const int delta) {
         m_reputation = std::clamp(m_reputation + delta, 0, 100);
     }
 
@@ -40,7 +37,7 @@ namespace delivery {
         }
     }
 
-    std::string Merchant::typeName(MerchantType type) {
+    std::string Merchant::typeName(const MerchantType type) {
         switch (type) {
             case MerchantType::CAFE:      return "咖啡店";
             case MerchantType::RETAIL:    return "零售店";

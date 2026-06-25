@@ -6,10 +6,10 @@
  *          用于游戏中的NPC寻路和路线规划
  */
 
+#include <cmath>
 #include <vector>
 #include <utility>
 #include <functional>
-#include <unordered_map>
 
 namespace delivery::algo {
 
@@ -21,7 +21,7 @@ namespace delivery::algo {
         int y;
         int g;                  ///< 起点到当前节点的实际代价
         int h;                  ///< 当前节点到终点的启发式估计
-        int f() const { return g + h; }
+        [[nodiscard]] int f() const { return g + h; }
 
         bool operator==(const PathNode& other) const {
             return x == other.x && y == other.y;
@@ -48,22 +48,22 @@ namespace delivery::algo {
     /**
      * @brief 曼哈顿距离启发式（四方向移动）
      */
-    inline int manhattanHeuristic(int x1, int y1, int x2, int y2) {
+    inline int manhattanHeuristic(const int x1, const int y1, const int x2, const int y2) {
         return std::abs(x1 - x2) + std::abs(y1 - y2);
     }
 
     /**
      * @brief 欧几里得距离启发式（八方向移动）
      */
-    inline int euclideanHeuristic(int x1, int y1, int x2, int y2) {
-        int dx = x1 - x2;
-        int dy = y1 - y2;
+    inline int euclideanHeuristic(const int x1, const int y1, const int x2, const int y2) {
+        const int dx = x1 - x2;
+        const int dy = y1 - y2;
         return static_cast<int>(std::sqrt(dx * dx + dy * dy));
     }
 
     /**
      * @brief Dijkstra 算法（无信息搜索）
-     * @param grid 可通行性检查函数: bool isWalkable(int x, int y)
+     * @param isWalkable grid可通行性检查函数
      * @param startX, startY 起点
      * @param goalX, goalY 终点
      * @return PathResult 包含路径和统计信息
@@ -76,7 +76,7 @@ namespace delivery::algo {
 
     /**
      * @brief A* 算法（启发式搜索）
-     * @param grid 可通行性检查函数
+     * @param isWalkable grid可通行性检查函数
      * @param startX, startY 起点
      * @param goalX, goalY 终点
      * @param heuristic 启发式函数（默认为曼哈顿距离）
@@ -86,7 +86,7 @@ namespace delivery::algo {
         const std::function<bool(int, int)>& isWalkable,
         int startX, int startY,
         int goalX, int goalY,
-        HeuristicFunc heuristic = manhattanHeuristic
+        const HeuristicFunc &heuristic = manhattanHeuristic
     );
 
 } // namespace delivery::algo

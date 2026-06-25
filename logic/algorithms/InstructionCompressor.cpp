@@ -32,7 +32,7 @@ std::unique_ptr<HuffmanNode> InstructionCompressor::buildTree(const std::unorder
 
     // 特殊情况：只有一个符号
     if (pq.size() == 1) {
-        auto node = pq.top();
+        const auto node = pq.top();
         pq.pop();
         auto root = std::make_unique<HuffmanNode>();
         root->frequency = node->frequency;
@@ -81,10 +81,10 @@ std::vector<uint8_t> InstructionCompressor::encodeToBytes(const std::string& bit
 
     for (size_t i = 0; i < bitString.length(); i += 8) {
         uint8_t byte = 0;
-        size_t bits = std::min(size_t(8), bitString.length() - i);
+        const size_t bits = std::min(static_cast<size_t>(8), bitString.length() - i);
         for (size_t j = 0; j < bits; ++j) {
             if (bitString[i + j] == '1') {
-                byte |= (1 << (7 - j));
+                byte |= 1 << (7 - j);
             }
         }
         result.push_back(byte);
@@ -93,14 +93,14 @@ std::vector<uint8_t> InstructionCompressor::encodeToBytes(const std::string& bit
     return result;
 }
 
-std::string InstructionCompressor::decodeFromBytes(const std::vector<uint8_t>& data, size_t totalBits) {
+std::string InstructionCompressor::decodeFromBytes(const std::vector<uint8_t>& data, const size_t totalBits) {
     std::string result;
     result.reserve(totalBits);
 
     for (size_t i = 0; i < totalBits; ++i) {
-        size_t byteIdx = i / 8;
-        size_t bitIdx = 7 - (i % 8);
-        result += (data[byteIdx] & (1 << bitIdx)) ? '1' : '0';
+        const size_t byteIdx = i / 8;
+        const size_t bitIdx = 7 - i % 8;
+        result += data[byteIdx] & 1 << bitIdx ? '1' : '0';
     }
 
     return result;
@@ -116,10 +116,10 @@ CompressResult InstructionCompressor::compress(const std::string& text) {
     }
 
     // 1. 统计频率
-    auto freq = buildFrequency(text);
+    const auto freq = buildFrequency(text);
 
     // 2. 构建哈夫曼树
-    auto root = buildTree(freq);
+    const auto root = buildTree(freq);
 
     // 3. 生成编码表
     CodeTable codeTable;
@@ -145,7 +145,7 @@ CompressResult InstructionCompressor::compress(const std::string& text) {
 DecompressResult InstructionCompressor::decompress(
     const std::vector<uint8_t>& data,
     const std::unordered_map<char, std::string>& codeTable,
-    size_t originalSize
+    const size_t originalSize
 ) {
     DecompressResult result;
 
@@ -155,7 +155,7 @@ DecompressResult InstructionCompressor::decompress(
 
     // 1. 构建反向编码表（编码 -> 符号）
     std::unordered_map<std::string, char> reverseTable;
-    for (auto [ch, code] : codeTable) {
+    for (const auto& [ch, code] : codeTable) {
         reverseTable[code] = ch;
     }
 
@@ -163,27 +163,26 @@ DecompressResult InstructionCompressor::decompress(
     // 实际项目中会在头部存储总比特数，这里简化
     size_t totalBits = data.size() * 8;
     // 去掉末尾的填充位（如果有）
-    while (totalBits > 0 && data[totalBits / 8] & (1 << (7 - totalBits % 8))) {
+    while (totalBits > 0 && data[totalBits / 8] & 1 << (7 - totalBits % 8)) {
         // 这里不能简单判断，实际应存储填充位数
         // 简化：使用原始大小来限制
         totalBits = originalSize * 8;  // 近似
     }
 
-    std::string bitString = decodeFromBytes(data, totalBits);
+    const std::string bitString = decodeFromBytes(data, totalBits);
 
     // 3. 解码
     std::string currentCode;
-    for (char bit : bitString) {
+    for (const char bit : bitString) {
         currentCode += bit;
-        auto it = reverseTable.find(currentCode);
-        if (it != reverseTable.end()) {
+        if (auto it = reverseTable.find(currentCode); it != reverseTable.end()) {
             result.text += it->second;
             currentCode.clear();
             if (result.text.size() >= originalSize) break;
         }
     }
 
-    result.success = (result.text.size() == originalSize);
+    result.success = result.text.size() == originalSize;
     return result;
 }
 

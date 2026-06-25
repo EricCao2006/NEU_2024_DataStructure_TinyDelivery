@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <cstdint>
 
 namespace delivery {
 
@@ -15,15 +14,15 @@ namespace delivery {
         Vehicle(int id, const std::string& model, int speed, int capacity, double cost);
 
         // ========== Getter ==========
-        int id() const { return m_id; }
-        const std::string& model() const { return m_model; }
-        int speed() const { return m_speed; }                       ///< 速度（格/秒）
-        int capacity() const { return m_capacity; }                 ///< 载重（kg）
-        double cost() const { return m_cost; }                      ///< 采购成本（万元）
-        bool isOwned() const { return m_owned; }
+        [[nodiscard]] int id() const { return m_id; }
+        [[nodiscard]] const std::string& model() const { return m_model; }
+        [[nodiscard]] int speed() const { return m_speed; }                       ///< 速度（格/秒）
+        [[nodiscard]] int capacity() const { return m_capacity; }                 ///< 载重（kg）
+        [[nodiscard]] double cost() const { return m_cost; }                      ///< 采购成本（万元）
+        [[nodiscard]] bool isOwned() const { return m_owned; }
 
         // ========== Setter ==========
-        void setOwned(bool owned) { m_owned = owned; }
+        void setOwned(const bool owned) { m_owned = owned; }
 
         /**
          * @brief 根据车辆类型创建预设车辆

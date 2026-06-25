@@ -69,12 +69,12 @@ public:
 
     // ========== 资金 ==========
     int money() const { return m_money; }
-    void addMoney(int amount) { m_money += amount; }
+    void addMoney(const int amount) { m_money += amount; }
     bool spendMoney(int amount);
 
     // ========== 时间 ==========
     int gameTime() const { return m_gameTime; }          ///< 游戏内时间（秒）
-    void advanceTime(int seconds) { m_gameTime += seconds; }
+    void advanceTime(const int seconds) { m_gameTime += seconds; }
 
     // ========== 等级 ==========
     CompanyLevel level() const { return m_level; }
@@ -86,7 +86,7 @@ public:
     // ========== 信誉 ==========
     int reputation() const { return m_reputation; }
     void changeReputation(int delta);
-    int maxReputation() const { return 100; }
+    static int maxReputation() { return 100; }
 
     // ========== 统计数据 ==========
     int totalOrders() const { return m_totalOrders; }
@@ -105,6 +105,9 @@ public:
     std::vector<Vehicle> vehicles;
     CityGrid cityGrid;
 
+    // 等级配置（静态）
+    static const std::vector<LevelInfo> LEVEL_CONFIG;
+    
     // ========== 订单队列（待分配） ==========
     std::vector<int> pendingOrderIds;
 
@@ -159,8 +162,6 @@ private:
     int m_failedOrders = 0;
     double m_totalRevenue = 0.0;
 
-    // 等级配置（静态）
-    static const std::vector<LevelInfo> LEVEL_CONFIG;
 };
 
 } // namespace delivery

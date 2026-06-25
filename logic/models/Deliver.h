@@ -33,23 +33,23 @@ public:
     Deliver(int id, const std::string& name, int x, int y, VehicleType vehicle);
 
     // ========== Getter ==========
-    int id() const { return m_id; }
-    const std::string& name() const { return m_name; }
-    int x() const { return m_x; }
-    int y() const { return m_y; }
-    VehicleType vehicle() const { return m_vehicle; }
-    DeliverStatus status() const { return m_status; }
-    int currentOrderId() const { return m_currentOrderId; }
-    int experience() const { return m_experience; }            ///< 经验值，影响派送速度
-    int fatigue() const { return m_fatigue; }                  ///< 疲劳度 0-100，越高越慢
-    double speedFactor() const;                                 ///< 综合速度系数
+    [[nodiscard]] int id() const { return m_id; }
+    [[nodiscard]] const std::string& name() const { return m_name; }
+    [[nodiscard]] int x() const { return m_x; }
+    [[nodiscard]] int y() const { return m_y; }
+    [[nodiscard]] VehicleType vehicle() const { return m_vehicle; }
+    [[nodiscard]] DeliverStatus status() const { return m_status; }
+    [[nodiscard]] int currentOrderId() const { return m_currentOrderId; }
+    [[nodiscard]] int experience() const { return m_experience; }            ///< 经验值，影响派送速度
+    [[nodiscard]] int fatigue() const { return m_fatigue; }                  ///< 疲劳度 0-100，越高越慢
+    [[nodiscard]] double speedFactor() const;                                 ///< 综合速度系数
 
     // ========== Setter ==========
-    void setPosition(int x, int y) { m_x = x; m_y = y; }
-    void setStatus(DeliverStatus status) { m_status = status; }
-    void setCurrentOrderId(int orderId) { m_currentOrderId = orderId; }
-    void addExperience(int exp) { m_experience += exp; }
-    void setFatigue(int fatigue) { m_fatigue = fatigue; }
+    void setPosition(const int x, const int y) { m_x = x; m_y = y; }
+    void setStatus(const DeliverStatus status) { m_status = status; }
+    void setCurrentOrderId(const int orderId) { m_currentOrderId = orderId; }
+    void addExperience(const int exp) { m_experience += exp; }
+    void setFatigue(const int fatigue) { m_fatigue = fatigue; }
     void rest();                                                ///< 休息，降低疲劳
 
     /**
@@ -63,12 +63,12 @@ public:
     /**
      * @brief 计算骑手到某点的曼哈顿距离
      */
-    int distanceTo(int tx, int ty) const;
+    [[nodiscard]] int distanceTo(int tx, int ty) const;
 
     /**
      * @brief 获取车辆基础速度（格/秒）
      */
-    double baseSpeed() const;
+    [[nodiscard]] double baseSpeed() const;
 
 private:
     int m_id = -1;
