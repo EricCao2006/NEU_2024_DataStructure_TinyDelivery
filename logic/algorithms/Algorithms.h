@@ -2,20 +2,27 @@
 
 #pragma once
 
+#include <string>
+
 namespace algo {
 /**
- * @brief 算法类
- * @details 抽象类，不实例化
+ * @brief 算法基类
  */
 class Algorithm {
 
 protected:
-    //算法计数
-    int count = 0;
+    // 操作计数（mutable 以允许在 const 方法中递增）
+    mutable int count = 0;
+    // 算法调用次数
+    mutable int callCount = 0;
 
 public:
-    //算法计数
-    int getCount() {return count;}
+    // 操作计数
+    int getCount() const {return count;}
+    // 调用次数
+    int getCallCount() const {return callCount;}
+    // 算法名称（用于统计输出）
+    virtual std::string algorithmName() const { return "Unknown"; }
 };
 
 
