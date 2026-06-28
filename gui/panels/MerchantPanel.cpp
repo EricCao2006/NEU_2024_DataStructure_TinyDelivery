@@ -1,5 +1,5 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+// TODO：商家面板
 
 #include "MerchantPanel.h"
+#include "ui_MerchantPanel.h"
+#include "../../logic/models/Merchant.h"

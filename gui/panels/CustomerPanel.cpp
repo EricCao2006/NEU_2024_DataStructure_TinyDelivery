@@ -1,5 +1,5 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+// TODO：顾客面板
 
 #include "CustomerPanel.h"
+#include "ui_CustomerPanel.h"
+#include "../../logic/models/Customer.h"

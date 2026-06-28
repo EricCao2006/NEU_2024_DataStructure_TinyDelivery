@@ -1,41 +1,27 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-#include <chrono>
-#include <iomanip>
-#include <sstream>
+using namespace std;
 
-namespace delivery::utils {
+// 日志等级, 0-debug, 1-info, 2-warn, 3-error
+#define LOG_LEVEL 1
 
-    enum class LogLevel {
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR
+namespace utils {
+
+    class Logger {
+        // 日志头, 0-debug, 1-info, 2-warn, 3-error
+        static constexpr string logHead[4] = { "\033[34m[DEBUG]", "\033[32m[INFO]", "\033[33m[WARN]", "\033[31m[ERROR]" };
+
+    public:
+        /**
+         * @brief 输出日志，级别小于LOG_LEVEL的不输出
+         * @param level 日志级别
+         * @param content 日志内容
+         */
+        static void log(const int level, const string& content) {
+            if (LOG_LEVEL > level ) {}
+            else cout << logHead[level] << content << endl << "\033[0m";
+        }
+
     };
-
-    inline std::string timestamp() {
-        const auto now = std::chrono::system_clock::now();
-        const auto time_t = std::chrono::system_clock::to_time_t(now);
-        const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-            now.time_since_epoch()
-        ) % 1000;
-        std::stringstream ss;
-        ss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S")
-           << '.' << std::setfill('0') << std::setw(3) << ms.count();
-        return ss.str();
-    }
-
-    inline void log(LogLevel level, const std::string& msg) {
-        const char* levelStr[] = {"[DEBUG]", "[INFO] ", "[WARN] ", "[ERROR]"};
-        std::cerr << timestamp() << " " << levelStr[static_cast<int>(level)] << " " << msg << std::endl;
-    }
-
-    //TODO：教师要求使用算法时输出对应的[INFO]
-#define LOG_DEBUG(msg) delivery::utils::log(delivery::utils::LogLevel::DEBUG, msg)
-#define LOG_INFO(msg)  delivery::utils::log(delivery::utils::LogLevel::INFO, msg)
-#define LOG_WARN(msg)  delivery::utils::log(delivery::utils::LogLevel::WARN, msg)
-#define LOG_ERROR(msg) delivery::utils::log(delivery::utils::LogLevel::ERROR, msg)
-
-} // namespace delivery::utils
+}

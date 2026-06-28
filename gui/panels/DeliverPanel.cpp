@@ -1,5 +1,5 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+// TODO：物流面板
 
 #include "DeliverPanel.h"
+#include "ui_DeliverPanel.h"
+#include "../../logic/models/Deliver.h"

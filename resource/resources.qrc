@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <!-- 样式表 -->
+        <file>gui/styles.qss</file>
+
+        <!-- 图标 -->
+        <file>resource/assets/icons/logo.png</file>
+        <file>resource/assets/icons/icon.ico</file>
+
+        <!-- 其他图片 -->
+        <file>resource/assets/icons/merchant.png</file>
+        <file>resource/assets/icons/customer.png</file>
+        <file>resource/assets/icons/warehouse.png</file>
+        <file>resource/assets/icons/deliver.png</file>
+    </qresource>
+</RCC>

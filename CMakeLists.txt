@@ -22,23 +22,12 @@ find_package(Qt6 COMPONENTS
 
 add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         gui/MainWindow.cpp
-        gui/MainWindow.h
         gui/MapWidget.cpp
-        gui/MapWidget.h
         gui/panels/ControlPanel.cpp
-        gui/panels/ControlPanel.h
-        gui/panels/DashboardPanel.cpp
-        gui/panels/DashboardPanel.h
         gui/panels/MerchantPanel.cpp
-        gui/panels/MerchantPanel.h
-        gui/panels/WarehousePanel.cpp
-        gui/panels/WarehousePanel.h
         gui/panels/CustomerPanel.cpp
-        gui/panels/CustomerPanel.h
         gui/panels/DeliverPanel.cpp
-        gui/panels/DeliverPanel.h
         gui/EventPopup.cpp
-        gui/EventPopup.h
         logic/GameEngine.cpp
         logic/GameEngine.h
         logic/GameState.cpp
@@ -47,32 +36,19 @@ add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         logic/models/Order.h
         logic/models/Deliver.cpp
         logic/models/Deliver.h
-        logic/models/Warehouse.cpp
-        logic/models/Warehouse.h
         logic/models/Merchant.cpp
         logic/models/Merchant.h
         logic/models/Customer.cpp
         logic/models/Customer.h
-        logic/models/Vehicle.cpp
-        logic/models/Vehicle.h
         logic/models/CityGrid.cpp
         logic/models/CityGrid.h
         logic/algorithms/OrderMerger.cpp
-        logic/algorithms/OrderMerger.h
         logic/algorithms/DeliverSorter.cpp
-        logic/algorithms/DeliverSorter.h
         logic/algorithms/InstructionCompressor.cpp
-        logic/algorithms/InstructionCompressor.h
         logic/algorithms/PathFinder.cpp
-        logic/algorithms/PathFinder.h
         logic/algorithms/AddressMatcher.cpp
-        logic/algorithms/AddressMatcher.h
         logic/systems/DispatchSystem.cpp
         logic/systems/DispatchSystem.h
-        logic/systems/WarehouseSystem.cpp
-        logic/systems/WarehouseSystem.h
-        logic/systems/ContractSystem.cpp
-        logic/systems/ContractSystem.h
         logic/systems/EventSystem.cpp
         logic/systems/EventSystem.h
         logic/systems/UpgradeSystem.cpp
@@ -84,7 +60,35 @@ add_executable(NEU_2024_DataStructure_TinyDelivery gui/main.cpp
         logic/utils/json_.h
         logic/models/Models.h
         logic/algorithms/Algorithms.h
-        logic/systems/Systems.h)
+        logic/systems/Systems.h
+        gui/mainwindow.cpp
+        gui/mainwindow.h
+        gui/mainwindow.ui
+        gui/MapWidget.cpp
+        gui/MapWidget.h
+        gui/EventPopup.cpp
+        gui/EventPopup.h
+        gui/EventPopup.ui
+        gui/panels/ControlPanel.cpp
+        gui/panels/ControlPanel.h
+        gui/panels/ControlPanel.ui
+        gui/panels/CustomerPanel.cpp
+        gui/panels/CustomerPanel.h
+        gui/panels/CustomerPanel.ui
+        gui/panels/DeliverPanel.cpp
+        gui/panels/DeliverPanel.h
+        gui/panels/DeliverPanel.ui
+        gui/panels/MerchantPanel.cpp
+        gui/panels/MerchantPanel.h
+        gui/panels/MerchantPanel.ui
+        logic/algorithms/Algorithms.cpp
+        logic/algorithms/AddressMatcher.h
+        logic/algorithms/AddressMatcher.h
+        logic/algorithms/DeliverSorter.h
+        logic/algorithms/InstructionCompressor.h
+        logic/algorithms/OrderMerger.h
+        logic/algorithms/PathFinder.h
+)
 target_link_libraries(NEU_2024_DataStructure_TinyDelivery
         Qt::Core
         Qt::Gui

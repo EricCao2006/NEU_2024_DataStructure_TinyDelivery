@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 
-namespace delivery::utils {
+namespace utils {
 
     using GameClock = std::chrono::steady_clock;
     using GameTimePoint = GameClock::time_point;
@@ -41,4 +41,4 @@ namespace delivery::utils {
         bool m_paused = false;
     };
 
-} // namespace delivery::utils
+}

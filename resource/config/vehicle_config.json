@@ -1,0 +1,7 @@
+{
+  "vehicles": [
+    { "id": 0, "name": "电动单车", "speed": 2, "capacity": 30, "cost": 0.3 },
+    { "id": 1, "name": "面包车", "speed": 3, "capacity": 200, "cost": 2.5 },
+    { "id": 2, "name": "冷链货车", "speed": 4, "capacity": 500, "cost": 8.0 }
+  ]
+}

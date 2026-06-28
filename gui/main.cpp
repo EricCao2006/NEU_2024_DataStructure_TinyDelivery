@@ -1,10 +1,10 @@
+// TODO：主程序
+
 #include <QApplication>
-#include <QPushButton>
+#include <QFile>
+#include "MainWindow.h"
+#include "../logic/utils/log_.h"
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-    QPushButton button("Hello world!", nullptr);
-    button.resize(200, 100);
-    button.show();
-    return QApplication::exec();
+    system("chcp 65001");
 }
