@@ -1,5 +1,4 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+// TODO：控制面板
 
 #include "ControlPanel.h"
+#include "ui_ControlPanel.h"

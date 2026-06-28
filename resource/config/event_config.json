@@ -1,0 +1,47 @@
+{
+  "events": [
+    {
+      "type": 0,
+      "title": "暴雨红色预警",
+      "description": "全市暴雨，骑手配送速度下降50%",
+      "duration_range": [60, 180],
+      "impact": -50
+    },
+    {
+      "type": 1,
+      "title": "高温橙色预警",
+      "description": "气温超过38℃，骑手易疲劳",
+      "duration_range": [60, 180],
+      "impact": -30
+    },
+    {
+      "type": 2,
+      "title": "双十一购物节",
+      "description": "订单量暴涨！抓住机会！",
+      "duration_range": [120, 240],
+      "impact": 100
+    },
+    {
+      "type": 3,
+      "title": "VIP客户投诉",
+      "description": "配送延误，客户表示不满",
+      "duration_range": [0, 0],
+      "impact": -10
+    },
+    {
+      "type": 4,
+      "title": "车队优惠促销",
+      "description": "新车采购享8折优惠！",
+      "duration_range": [60, 120],
+      "impact": 20
+    },
+    {
+      "type": 5,
+      "title": "油价上涨",
+      "description": "燃油成本增加20%",
+      "duration_range": [120, 300],
+      "impact": -20
+    }
+  ],
+  "trigger_interval": 60
+}

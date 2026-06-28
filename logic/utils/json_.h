@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 
-namespace delivery::utils {
+namespace utils {
 
     using json = nlohmann::json;
 
@@ -33,4 +33,4 @@ namespace delivery::utils {
         return std::filesystem::exists(path);
     }
 
-} // namespace delivery::utils
+}

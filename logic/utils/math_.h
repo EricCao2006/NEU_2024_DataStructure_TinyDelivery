@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace delivery::utils {
+namespace utils {
 
     inline int manhattanDistance(const int x1, const int y1, const int x2, const int y2) {
         return std::abs(x1 - x2) + std::abs(y1 - y2);
@@ -28,4 +28,4 @@ namespace delivery::utils {
         return a + (b - a) * t;
     }
 
-} // namespace delivery::utils
+}

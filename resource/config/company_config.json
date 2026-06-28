@@ -1,0 +1,12 @@
+{
+  "initial_money": 10000,
+  "initial_reputation": 60,
+  "initial_level": 0,
+  "level_config": [
+    { "level": 0, "name": "街边快递站", "min_reputation": 0, "upgrade_cost": 0, "max_delivers": 5, "unlock_warehouse": 1 },
+    { "level": 1, "name": "同城物流点", "min_reputation": 30, "upgrade_cost": 5000, "max_delivers": 10, "unlock_warehouse": 2 },
+    { "level": 2, "name": "城市物流网", "min_reputation": 50, "upgrade_cost": 15000, "max_delivers": 20, "unlock_warehouse": 3 },
+    { "level": 3, "name": "区域集散中心", "min_reputation": 70, "upgrade_cost": 40000, "max_delivers": 35, "unlock_warehouse": 4 },
+    { "level": 4, "name": "都市供应链", "min_reputation": 90, "upgrade_cost": 100000, "max_delivers": 50, "unlock_warehouse": 5 }
+  ]
+}

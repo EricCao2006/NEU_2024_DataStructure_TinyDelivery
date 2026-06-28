@@ -1,0 +1,19 @@
+{
+  "grid_size": 20,
+  "merchants": [
+    { "id": 0, "name": "星巴克", "x": 3, "y": 5, "type": 0 },
+    { "id": 1, "name": "优衣库", "x": 12, "y": 8, "type": 1 },
+    { "id": 2, "name": "海底捞", "x": 8, "y": 15, "type": 2 }
+  ],
+  "customers": [
+    { "id": 0, "name": "阳光写字楼", "x": 15, "y": 16, "vip_level": 2 },
+    { "id": 1, "name": "幸福小区", "x": 7, "y": 14, "vip_level": 0 },
+    { "id": 2, "name": "万达广场", "x": 4, "y": 18, "vip_level": 1 }
+  ],
+  "warehouses": [
+    { "id": 0, "name": "城东转运中心", "x": 10, "y": 10, "capacity": 500 }
+  ],
+  "obstacles": [
+    { "x": 5, "y": 7 }, { "x": 5, "y": 8 }, { "x": 5, "y": 9 }
+  ]
+}

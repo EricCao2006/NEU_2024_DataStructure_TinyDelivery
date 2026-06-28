@@ -3,7 +3,7 @@
 #include <random>
 #include <chrono>
 
-namespace delivery::utils {
+namespace utils {
 
     inline std::mt19937& rng() {
         static std::mt19937 engine(
@@ -36,4 +36,4 @@ namespace delivery::utils {
         return random01() < probability;
     }
 
-} // namespace delivery::utils
+}

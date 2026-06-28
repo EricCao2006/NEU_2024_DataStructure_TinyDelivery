@@ -1,5 +1,7 @@
-//
-// Created by Administrator on 2026/6/23.
-//
+// TODO：绘制地图
 
 #include "MapWidget.h"
+#include "../logic/GameState.h"
+#include <QPainter>
+#include <QPen>
+#include <QBrush>
