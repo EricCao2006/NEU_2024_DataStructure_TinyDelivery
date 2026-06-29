@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <!-- 样式表 -->
+        <file>gui/styles.qss</file>
+
+        <!-- 图标 -->
+        <file>resource/assets/icons/icon.ico</file>
+    </qresource>
+</RCC>

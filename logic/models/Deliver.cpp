@@ -32,6 +32,29 @@ namespace models {
         return (m_x == targetX && m_y == targetY);
     }
 
+    bool Deliver::moveAlongPath() {
+        if (m_path.empty() || m_pathIndex >= m_path.size()) {
+            return true;  // 无路径或已到达
+        }
+
+        const auto& next = m_path[m_pathIndex];
+        const int nextX = next.first;
+        const int nextY = next.second;
+
+        // 向下一个路径点移动
+        if (m_x < nextX) m_x++;
+        else if (m_x > nextX) m_x--;
+        else if (m_y < nextY) m_y++;
+        else if (m_y > nextY) m_y--;
+
+        // 如果到达当前路径点，前进到下一个
+        if (m_x == nextX && m_y == nextY) {
+            m_pathIndex++;
+        }
+
+        return (m_pathIndex >= m_path.size());  // 是否到达终点
+    }
+
     utils::json Deliver::toJsonObject() const {
         return {
             {"id", m_id},

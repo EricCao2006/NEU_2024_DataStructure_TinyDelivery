@@ -99,6 +99,20 @@ namespace systems {
                             order.setStatus(OrderStatus::Assigned);
                             order.setAssignTime(0);
 
+                            // 用 PathFinder 规划路径（Dijkstra/A*）
+                            auto path = m_pathFinder.findPathDijkstra(*m_grid, d.getX(), d.getY(),
+                                                                      merchant->getX(), merchant->getY());
+                            if (!path.empty()) {
+                                utils::Logger::log(0, "[Dispatch] Path planned: " + std::to_string(path.size()) + " steps");
+                                // 将路径存入 Deliver
+                                for (auto& del : m_delivers) {
+                                    if (del.getId() == bestId) {
+                                        del.setPath(path);
+                                        break;
+                                    }
+                                }
+                            }
+
                             // 用哈夫曼编码压缩配送指令
                             std::string instruction = "Deliver:#" + std::to_string(order.getId()) +
                                                       " From:" + merchant->getName().toStdString() +
@@ -155,14 +169,20 @@ namespace systems {
         }
 
         if (order->getStatus() == OrderStatus::PickingUp) {
-            // 向商家移动
-            if (bool arrived = deliver.moveToward(merchant->getX(), merchant->getY())) {
+            // 向商家移动（沿规划路径）
+            if (bool arrived = deliver.moveAlongPath()) {
                 order->setStatus(OrderStatus::Delivering);
                 deliver.addLoad(1);
+                // 规划去客户的路径
+                auto path = m_pathFinder.findPathDijkstra(*m_grid, deliver.getX(), deliver.getY(),
+                                                          customer->getX(), customer->getY());
+                if (!path.empty()) {
+                    deliver.setPath(path);
+                }
             }
         } else if (order->getStatus() == OrderStatus::Delivering) {
-            // 向客户移动
-            if (bool arrived = deliver.moveToward(customer->getX(), customer->getY())) {
+            // 向客户移动（沿规划路径）
+            if (bool arrived = deliver.moveAlongPath()) {
                 order->setStatus(OrderStatus::Completed);
                 order->setCompleteTime(0);
                 deliver.removeLoad(1);

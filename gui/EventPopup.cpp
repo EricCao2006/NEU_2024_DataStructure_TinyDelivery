@@ -7,6 +7,27 @@ EventPopup::EventPopup(QWidget* parent) : QDialog(parent) {
     setWindowTitle("随机事件");
     setFixedSize(350, 180);
 
+    // 设置弹窗整体深色主题
+    setStyleSheet(R"(
+        QDialog {
+            background-color: #16213e;
+            border-radius: 12px;
+        }
+        QLabel {
+            color: #e0e0e0;
+        }
+        QPushButton {
+            background-color: #0f3460;
+            color: #e0e0e0;
+            border: 1px solid #1a4a7a;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        QPushButton:hover {
+            background-color: #1a4a7a;
+        }
+    )");
+
     auto* layout = new QVBoxLayout(this);
 
     m_titleLabel = new QLabel(this);

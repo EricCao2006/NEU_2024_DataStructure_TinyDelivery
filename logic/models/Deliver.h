@@ -41,9 +41,19 @@ namespace models {
         [[nodiscard]] const std::vector<int>& getOrderIds() const { return m_orderIds; }
 
         /**
+         * @brief 设置规划好的路径
+         */
+        void setPath(const std::vector<std::pair<int, int>>& path) { m_path = path; m_pathIndex = 0; }
+
+        /**
          * @brief 向目标坐标移动一步，返回是否到达
          */
         bool moveToward(int targetX, int targetY);
+
+        /**
+         * @brief 沿规划路径移动一步，返回是否到达终点
+         */
+        bool moveAlongPath();
 
         [[nodiscard]] utils::json toJsonObject() const;
         static Deliver fromJson(const utils::json& j);
@@ -60,6 +70,10 @@ namespace models {
         int m_completedOrders = 0;
         double m_rating = 5.0;
         std::vector<int> m_orderIds;
+        
+        // 路径规划
+        std::vector<std::pair<int, int>> m_path;  // 规划好的路径
+        size_t m_pathIndex = 0;                   // 当前路径索引
     };
 
     /**

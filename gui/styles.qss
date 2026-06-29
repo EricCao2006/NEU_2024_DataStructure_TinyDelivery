@@ -10,6 +10,15 @@ QMainWindow {
     background-color: #1a1a2e;
 }
 
+/* ============ 标签 ============ */
+QLabel {
+    color: #e0e0e0;
+}
+
+QGroupBox QLabel, QFormLayout QLabel {
+    color: #c0c0d0 !important;
+}
+
 /* ============ 菜单栏 ============ */
 QMenuBar {
     background-color: #16213e;
@@ -60,6 +69,18 @@ QDockWidget::title {
     padding: 8px;
     margin: 4px;
     text-align: center;
+}
+
+QDockWidget::pane {
+    border: none;
+    background: transparent;
+}
+
+/* 消除 Dock 与中央部件之间的间距 */
+QMainWindow::separator {
+    background: #0f3460;
+    width: 2px;
+    height: 2px;
 }
 
 /* ============ 分组框 ============ */
@@ -148,6 +169,43 @@ QComboBox QAbstractItemView {
     selection-background-color: #0f3460;
     selection-color: #e0e0e0;
     outline: none;
+}
+
+/* ============ 表格 ============ */
+QTableWidget {
+    background-color: #1a1a2e;
+    alternate-background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    gridline-color: #0f3460;
+    color: #e0e0e0;
+    outline: none;
+}
+
+QTableWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid #0f3460;
+}
+
+QTableWidget::item:selected {
+    background-color: #0f3460;
+}
+
+QHeaderView::section {
+    background-color: #16213e;
+    color: #a0c4ff;
+    border: none;
+    border-bottom: 2px solid #0f3460;
+    padding: 6px;
+    font-weight: bold;
+}
+
+/* 表格左上角 corner widget */
+QTableCornerButton::section {
+    background-color: #16213e;
+    border: none;
+    border-right: 2px solid #0f3460;
+    border-bottom: 2px solid #0f3460;
 }
 
 /* ============ 列表 ============ */
