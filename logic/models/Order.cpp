@@ -9,10 +9,10 @@ namespace models {
     }
 
     void Order::calculateFee() {
-        // 基础费 = 距离 × 1.5元
-        const double baseFee = m_distance * 1.5;
-        // VIP加成：每级 +15%
-        const double vipMultiplier = 1.0 + m_vipLevel * 0.15;
+        // 基础费 = 距离 × 5.0元
+        const double baseFee = m_distance * 5.0;
+        // VIP加成：每级 +20%
+        const double vipMultiplier = 1.0 + m_vipLevel * 0.20;
         m_deliveryFee = baseFee * vipMultiplier;
     }
 

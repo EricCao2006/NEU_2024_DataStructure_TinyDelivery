@@ -11,13 +11,13 @@ EventPopup::EventPopup(QWidget* parent) : QDialog(parent) {
 
     m_titleLabel = new QLabel(this);
     m_titleLabel->setAlignment(Qt::AlignCenter);
-    m_titleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #d35400;");
+    m_titleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #e94560;");
     layout->addWidget(m_titleLabel);
 
     m_descLabel = new QLabel(this);
     m_descLabel->setAlignment(Qt::AlignCenter);
     m_descLabel->setWordWrap(true);
-    m_descLabel->setStyleSheet("font-size: 14px; color: #333;");
+    m_descLabel->setStyleSheet("font-size: 14px; color: #c0c0d0;");
     layout->addWidget(m_descLabel);
 
     auto* btn = new QPushButton("知道了", this);

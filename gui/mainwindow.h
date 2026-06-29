@@ -17,7 +17,7 @@ public:
     ~MainWindow() override;
 
 private slots:
-    void onTickUpdated() const;
+    void onTickUpdated();
     void onEventTriggered(const QString& title, const QString& desc) const;
     void onOrderCreated(int orderId) const;
     void onOrderCompleted(int orderId) const;

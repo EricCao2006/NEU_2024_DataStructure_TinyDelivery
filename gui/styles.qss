@@ -1,1 +1,311 @@
-/* TinyDelivery - Fluent Design 样式表 */
+/* TinyDelivery - Fluent Design 都市风样式表 */
+
+/* ============ 全局基础 ============ */
+* {
+    font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+    font-size: 10pt;
+}
+
+QMainWindow {
+    background-color: #1a1a2e;
+}
+
+/* ============ 菜单栏 ============ */
+QMenuBar {
+    background-color: #16213e;
+    color: #e0e0e0;
+    border-bottom: 1px solid #0f3460;
+    padding: 4px;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+QMenuBar::item:selected {
+    background-color: #0f3460;
+}
+
+QMenu {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+QMenu::item {
+    padding: 8px 24px;
+    border-radius: 6px;
+    margin: 2px 0px;
+}
+
+QMenu::item:selected {
+    background-color: #0f3460;
+}
+
+/* ============ Dock 标题栏 ============ */
+QDockWidget {
+    color: #a0c4ff;
+    font-weight: bold;
+    font-size: 11pt;
+}
+
+QDockWidget::title {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 4px;
+    text-align: center;
+}
+
+/* ============ 分组框 ============ */
+QGroupBox {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    margin-top: 12px;
+    padding: 16px 12px 12px 12px;
+    font-weight: bold;
+    color: #a0c4ff;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 4px 12px;
+    background-color: #0f3460;
+    border-radius: 6px;
+    color: #e0e0e0;
+}
+
+/* ============ 按钮 ============ */
+QPushButton {
+    background-color: #0f3460;
+    color: #e0e0e0;
+    border: 1px solid #1a4a7a;
+    border-radius: 8px;
+    padding: 8px 16px;
+    min-height: 24px;
+    font-weight: 500;
+}
+
+QPushButton:hover {
+    background-color: #1a4a7a;
+    border-color: #2a6aaa;
+}
+
+QPushButton:pressed {
+    background-color: #0a2a50;
+}
+
+QPushButton:disabled {
+    background-color: #2a2a3e;
+    color: #606080;
+    border-color: #3a3a4e;
+}
+
+/* 强调按钮（升级等） */
+QPushButton[accent="true"] {
+    background-color: #e94560;
+    border-color: #ff6b8a;
+}
+
+QPushButton[accent="true"]:hover {
+    background-color: #ff6b8a;
+}
+
+/* ============ 输入框/下拉框 ============ */
+QComboBox, QSpinBox, QLineEdit {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    padding: 6px 10px;
+    min-height: 22px;
+}
+
+QComboBox:hover, QSpinBox:hover, QLineEdit:hover {
+    border-color: #1a4a7a;
+}
+
+QComboBox:focus, QSpinBox:focus, QLineEdit:focus {
+    border-color: #e94560;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    selection-background-color: #0f3460;
+    selection-color: #e0e0e0;
+    outline: none;
+}
+
+/* ============ 列表 ============ */
+QListWidget {
+    background-color: #1a1a2e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 4px;
+    outline: none;
+}
+
+QListWidget::item {
+    background: transparent;
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin: 2px 0px;
+    color: #c0c0d0;
+}
+
+QListWidget::item:hover {
+    background-color: #0f3460;
+}
+
+QListWidget::item:selected {
+    background-color: #1a4a7a;
+    color: #ffffff;
+}
+
+/* ============ 滚动条 ============ */
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 4px 2px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background: #0f3460;
+    min-height: 30px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #1a4a7a;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: transparent;
+    height: 8px;
+    margin: 2px 4px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #0f3460;
+    min-width: 30px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #1a4a7a;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* ============ 标签页 ============ */
+QTabWidget::pane {
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    background-color: #16213e;
+    padding: 8px;
+}
+
+QTabBar::tab {
+    background-color: #1a1a2e;
+    color: #a0a0b0;
+    border: 1px solid #0f3460;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 8px 16px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background-color: #16213e;
+    color: #e0e0e0;
+    border-bottom: 2px solid #e94560;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #0f3460;
+}
+
+/* ============ 状态栏 ============ */
+QStatusBar {
+    background-color: #16213e;
+    color: #a0c4ff;
+    border-top: 1px solid #0f3460;
+    padding: 4px;
+    font-size: 9pt;
+}
+
+/* ============ 工具提示 ============ */
+QToolTip {
+    background-color: #16213e;
+    color: #e0e0e0;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+/* ============ 进度条 ============ */
+QProgressBar {
+    background-color: #1a1a2e;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    text-align: center;
+    color: #e0e0e0;
+    min-height: 18px;
+}
+
+QProgressBar::chunk {
+    background-color: #e94560;
+    border-radius: 5px;
+}
+
+/* ============ 复选框 ============ */
+QCheckBox {
+    spacing: 8px;
+    color: #c0c0d0;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #0f3460;
+    border-radius: 4px;
+    background-color: #1a1a2e;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #e94560;
+    border-color: #e94560;
+}
+
+QCheckBox::indicator:hover {
+    border-color: #1a4a7a;
+}
+
+/* ============ 分割线 ============ */
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
+    color: #0f3460;
+    max-height: 1px;
+}

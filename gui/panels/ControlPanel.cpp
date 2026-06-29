@@ -79,6 +79,16 @@ ControlPanel::ControlPanel(GameEngine* engine, QWidget* parent)
     });
     actionLayout->addRow(m_pauseBtn);
 
+    // 游戏速度
+    m_speedSpin = new QSpinBox(this);
+    m_speedSpin->setRange(1, 5);
+    m_speedSpin->setValue(1);
+    m_speedSpin->setSuffix("x");
+    connect(m_speedSpin, QOverload<int>::of(&QSpinBox::valueChanged), [this](int value) {
+        m_engine->setSpeed(static_cast<double>(value));
+    });
+    actionLayout->addRow("速度:", m_speedSpin);
+
     layout->addWidget(actionGroup);
     layout->addStretch();
 }

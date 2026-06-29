@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     utils::Logger::log(0, std::string("[MainWindow] Hire 1: ") + (h1 ? "OK" : "FAIL"));
     bool h2 = m_engine->hireDeliver("小李");
     utils::Logger::log(0, std::string("[MainWindow] Hire 2: ") + (h2 ? "OK" : "FAIL"));
+    bool h3 = m_engine->hireDeliver("小王");
+    utils::Logger::log(0, std::string("[MainWindow] Hire 3: ") + (h3 ? "OK" : "FAIL"));
 
     // 启动游戏循环
     m_engine->start();
@@ -103,6 +105,12 @@ void MainWindow::setupUI() {
     deliverDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
     addDockWidget(Qt::RightDockWidgetArea, deliverDock);
 
+    // 消除 Dock 间距
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
     // 事件弹窗
     m_eventPopup = new EventPopup(this);
 
@@ -130,11 +138,12 @@ void MainWindow::connectSignals() {
     connect(m_engine, &GameEngine::levelUp, this, &MainWindow::onLevelUp);
 }
 
-void MainWindow::onTickUpdated() const {
+void MainWindow::onTickUpdated() {
     m_controlPanel->refresh();
     m_merchantPanel->refresh();
     m_customerPanel->refresh();
     m_deliverPanel->refresh();
+    m_mapWidget->setDelivers(&m_engine->dispatch().getDelivers());
     m_mapWidget->update();
 }
 

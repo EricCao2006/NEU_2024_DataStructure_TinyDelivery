@@ -15,7 +15,7 @@ void GameEngine::init(const QString& configDir) {
     // 连接信号
     m_dispatch.onOrderCompleted = [this](const models::Order& order) {
         m_upgrade.addMoney(order.getDeliveryFee());
-        m_upgrade.addReputation(1.0);
+        m_upgrade.addReputation(3.0);  // 每单+3声望
         emit orderCompleted(order.getId());
         emit moneyChanged(m_upgrade.getMoney());
         emit reputationChanged(m_upgrade.getReputation());
@@ -80,14 +80,19 @@ void GameEngine::onTick() {
     if (gameDeltaSec > 0) {
         m_gameTimeSeconds += static_cast<int>(gameDeltaSec);
 
+        // 事件影响：负值减速，正值加速
+        const int eventImpact = m_eventSystem.getTotalImpact();
+        double effectiveDelta = gameDeltaSec * (1.0 + eventImpact / 100.0);
+        if (effectiveDelta < 0.1) effectiveDelta = 0.1;  // 最低速度保底
+
         // 自动下单
-        m_orderTimer += gameDeltaSec;
+        m_orderTimer += effectiveDelta;
         if (m_orderTimer >= m_orderInterval) {
             m_orderTimer = 0.0;
             generateRandomOrder();
         }
 
-        m_dispatch.tick(gameDeltaSec);
+        m_dispatch.tick(effectiveDelta);
         m_eventSystem.tick(gameDeltaSec);
 
         emit tickUpdated();
@@ -117,7 +122,7 @@ bool GameEngine::hireDeliver(const QString& name) {
     if (static_cast<int>(m_dispatch.getDelivers().size()) >= m_upgrade.getMaxDelivers()) {
         return false;
     }
-    double cost = 500.0;
+    double cost = 300.0;  // 招募费用
     if (!m_upgrade.addMoney(-cost)) return false;
 
     models::Deliver d(static_cast<int>(m_dispatch.getDelivers().size()), name);
